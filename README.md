@@ -1,27 +1,29 @@
 ## Web API using koa and jwt!
+`mkdir -p ./api/db/users`
+`npm install`
 `npm run start`
 ### routes:
 #### POST /user/create
 #### input: {
-#### login, 
-#### password
+#### &nbsp;&nbsp;&nbsp;&nbsp;login, 
+#### &nbsp;&nbsp;&nbsp;&nbsp;password
 #### }
 #### output: {
-#### token
+#### &nbsp;&nbsp;&nbsp;&nbsp;token
 #### }
 #### POST /user/login
 #### input: {
-#### login,
-#### password
+#### &nbsp;&nbsp;&nbsp;&nbsp;login,
+#### &nbsp;&nbsp;&nbsp;&nbsp;password
 #### }
 #### output: {
-#### token
+#### &nbsp;&nbsp;&nbsp;&nbsp;token
 #### }
 #### GET /btcRate
 #### headers: {
-#### Authorization: Bearer \<jwtToken\>
+#### &nbsp;&nbsp;&nbsp;&nbsp;Authorization: Bearer \<jwtToken\>
 #### }
 #### output: {
-#### sell,
-#### buy
+#### &nbsp;&nbsp;&nbsp;&nbsp;sell,
+#### &nbsp;&nbsp;&nbsp;&nbsp;buy
 #### }
