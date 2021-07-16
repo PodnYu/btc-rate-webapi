@@ -7,21 +7,21 @@ function getJWTToken(ctx) {
 	return token || null;
 }
 
-const extractJWTPayload = () => async (ctx, next) => {
+const extractJWTPayload = async (ctx, next) => {
 	const token = getJWTToken(ctx);
 	if (token) {
 		try {
 			ctx.request.tokenPayload = await verifyToken(token);
 		} catch (err) {
 			console.error('Error occured while verifying token:', err.message);
+			ctx.request.tokenPayload = null;
 			ctx.status = 401;
 			ctx.body = { message: 'Unauthorized, bad token!' };
-			ctx.request.tokenPayload = null;
 			return;
 		}
 	} else {
-		ctx.status = 401;
-		ctx.body = { message: 'Unauthorized, token not provided!' };
+		ctx.status = 403;
+		ctx.body = { message: 'Forbidden, token not provided!' };
 		return;
 	}
 

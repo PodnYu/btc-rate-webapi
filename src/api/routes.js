@@ -3,12 +3,12 @@ const createAuthRoutes = require('./routes/auth');
 const createBTCRoutes = require('./routes/btc');
 
 const router = new KoaRouter();
-const protectedRouter = new KoaRouter();
+// const protectedRouter = new KoaRouter();
 
-createAuthRoutes(router, protectedRouter);
-createBTCRoutes(router, protectedRouter);
+createAuthRoutes(router);
+createBTCRoutes(router);
 
 module.exports = {
 	router,
-	protectedRouter,
+	// protectedRouter,
 };
