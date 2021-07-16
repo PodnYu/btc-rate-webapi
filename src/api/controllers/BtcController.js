@@ -1,6 +1,5 @@
-const userService = require('../services/UserService');
-const { getBTCToUAHExchange } = require('../utils/btcUtils');
 const btcService = require('../services/BtcService');
+const BtcRateDto = require('../dtos/BtcRateDto');
 
 class BtcController {
 	async getBtcRate(ctx) {
@@ -8,7 +7,7 @@ class BtcController {
 
 		const result = await btcService.getBTCToUAHExchange(userId);
 		ctx.status = result.status;
-		ctx.body = result.body;
+		ctx.body = new BtcRateDto(result.body);
 	}
 }
 

@@ -1,4 +1,4 @@
-class BtcRate {
+class BtcRateDto {
 	constructor(obj) {
 		this.sell = obj.sell;
 		this.buy = obj.buy;
@@ -9,8 +9,8 @@ class BtcRate {
 	}
 
 	static isValid(obj) {
-		return new BtcRate(obj).isValid();
+		return new BtcRateDto(obj).isValid();
 	}
 }
 
-module.exports = BtcRate;
+module.exports = BtcRateDto;

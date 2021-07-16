@@ -2,7 +2,8 @@ const userService = require('../services/UserService');
 const { signToken } = require('../utils/jwtUtils');
 
 class AuthService {
-	login = async (login, password) => {
+	login = async (userDto) => {
+		const { login, password } = userDto;
 		const response = {};
 
 		const users = await userService.getAllUsers();
@@ -21,7 +22,8 @@ class AuthService {
 		return response;
 	};
 
-	create = async (login, password) => {
+	create = async (userDto) => {
+		const { login, password } = userDto;
 		const response = {};
 
 		if (await userService.isLoginAlreadyTaken(login)) {

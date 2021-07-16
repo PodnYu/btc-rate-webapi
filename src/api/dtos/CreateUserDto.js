@@ -1,4 +1,4 @@
-class LoginUser {
+class CreateUserDto {
 	constructor(obj) {
 		this.login = obj.login;
 		this.password = obj.password;
@@ -9,8 +9,8 @@ class LoginUser {
 	}
 
 	static isValid(obj) {
-		return new LoginUser(obj).isValid();
+		return new CreateUserDto(obj).isValid();
 	}
 }
 
-module.exports = LoginUser;
+module.exports = CreateUserDto;
