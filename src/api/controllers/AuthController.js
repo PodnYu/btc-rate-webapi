@@ -4,30 +4,18 @@ class AuthController {
 	async login(ctx) {
 		const { login, password } = ctx.request.body;
 
-		try {
-			const result = await authService.login(login, password);
+		const result = await authService.login(login, password);
 
-			ctx.status = result.status;
-			ctx.body = result.body;
-		} catch (err) {
-			console.error(err.message);
-			ctx.status = 500;
-			ctx.body = { message: 'Internal server error!' };
-		}
+		ctx.status = result.status;
+		ctx.body = result.body;
 	}
 
 	async create(ctx) {
 		const { login, password } = ctx.request.body;
 
-		try {
-			const result = await authService.create(login, password);
-			ctx.status = result.status;
-			ctx.body = result.body;
-		} catch (err) {
-			console.error(err.message);
-			ctx.status = 500;
-			ctx.body = { message: 'Internal server error!' };
-		}
+		const result = await authService.create(login, password);
+		ctx.status = result.status;
+		ctx.body = result.body;
 	}
 }
 

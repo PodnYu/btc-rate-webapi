@@ -6,15 +6,9 @@ class BtcController {
 	async getBtcRate(ctx) {
 		const userId = ctx.request.tokenPayload.userId;
 
-		try {
-			const result = await btcService.getBTCToUAHExchange(userId);
-			ctx.status = result.status;
-			ctx.body = result.body;
-		} catch (err) {
-			console.error(err.mesage);
-			ctx.status = 500;
-			ctx.body = { message: 'Internal server error!' };
-		}
+		const result = await btcService.getBTCToUAHExchange(userId);
+		ctx.status = result.status;
+		ctx.body = result.body;
 	}
 }
 

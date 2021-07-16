@@ -28,6 +28,16 @@ describe('Auth testing', () => {
 		expect(response.body).to.have.property('token');
 	});
 
+	it('should NOT create new user and return token', async () => {
+		await userService.createUser('test', 'test');
+		const response = await chai
+			.request(server)
+			.post('/user/create')
+			.send({ login: 'test', password: 'test' });
+
+		expect(response.status).to.be.equal(403);
+	});
+
 	it('should login successfully and return token', async () => {
 		await userService.createUser('test', 'test');
 		const response = await chai
@@ -39,7 +49,7 @@ describe('Auth testing', () => {
 		expect(response.body).to.have.property('token');
 	});
 
-	it('should not login successfully and return 404 status code', async () => {
+	it('should NOT login successfully and return 404 status code', async () => {
 		await userService.createUser('test', 'test');
 
 		let response = await chai

@@ -36,7 +36,7 @@ describe('BTC testing', () => {
 		expect(response.body).to.have.property('sell');
 	});
 
-	it('should not get btcRate and return 403 status code', async () => {
+	it('should NOT get btcRate and return 403 status code', async () => {
 		const response = await chai.request(server).get('/btcRate');
 
 		expect(response.status).to.be.equal(403);
