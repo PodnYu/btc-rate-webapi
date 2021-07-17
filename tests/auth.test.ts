@@ -1,8 +1,10 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const userService = require('../src/api/services/UserService');
-require('dotenv').config();
-const app = require('../src/app');
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+import userService from '../src/api/services/UserService';
+import dotenv from 'dotenv';
+dotenv.config();
+import app from '../src/app';
+import { User } from '../src/api/models/User';
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -29,7 +31,8 @@ describe('Auth testing', () => {
 	});
 
 	it('should NOT create new user and return token', async () => {
-		await userService.createUser('test', 'test');
+		const user = new User('test', 'test');
+		await userService.createUser(user);
 		const response = await chai
 			.request(server)
 			.post('/user/create')
@@ -39,7 +42,8 @@ describe('Auth testing', () => {
 	});
 
 	it('should login successfully and return token', async () => {
-		await userService.createUser('test', 'test');
+		const user = new User('test', 'test');
+		await userService.createUser(user);
 		const response = await chai
 			.request(server)
 			.post('/user/login')
@@ -50,7 +54,8 @@ describe('Auth testing', () => {
 	});
 
 	it('should NOT login successfully and return 404 status code', async () => {
-		await userService.createUser('test', 'test');
+		const user = new User('test', 'test');
+		await userService.createUser(user);
 
 		let response = await chai
 			.request(server)
@@ -65,5 +70,21 @@ describe('Auth testing', () => {
 			.send({ login: 'test', password: 'testb' });
 
 		expect(response.status).to.be.equal(404);
+	});
+
+	it('should get 400 status code', async () => {
+		let response = await chai
+			.request(server)
+			.post('/user/create')
+			.send({ login: '', password: 'test' });
+
+		expect(response.status).to.be.equal(400);
+
+		response = await chai
+			.request(server)
+			.post('/user/login')
+			.send({ login: 'test', password: '' });
+
+		expect(response.status).to.be.equal(400);
 	});
 });

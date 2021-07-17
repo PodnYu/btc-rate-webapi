@@ -1,8 +1,9 @@
-const authController = require('../controllers/AuthController');
-const { exceptionCatcher } = require('../utils/controllerUtils');
-const authMiddleware = require('../middleware/AuthMiddleware');
+import KoaRouter from 'koa-router';
+import authController from '../controllers/AuthController';
+import { exceptionCatcher } from '../utils/controllerUtils';
+import authMiddleware from '../middleware/AuthMiddleware';
 
-module.exports = function (router) {
+export default function (router: KoaRouter): void {
 	const urlPrefix = '/user';
 
 	router.post(
@@ -16,4 +17,4 @@ module.exports = function (router) {
 		authMiddleware.validateUserOnCreate,
 		exceptionCatcher(authController.create)
 	);
-};
+}

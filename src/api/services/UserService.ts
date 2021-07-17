@@ -1,8 +1,9 @@
-const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
+import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
+import path from 'path';
+import { promisify } from 'util';
+import { User } from '../models/User';
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
@@ -10,6 +11,8 @@ const readDir = promisify(fs.readdir);
 const usersDir = path.join(__dirname, '/../../../db/users');
 
 class UserService {
+	usersDir: string;
+
 	constructor(pathToUsersDb = usersDir) {
 		const usersDirExists = fs.existsSync(pathToUsersDb);
 		if (!usersDirExists) {
@@ -18,54 +21,62 @@ class UserService {
 		this.usersDir = pathToUsersDb;
 	}
 
-	getFilePath = (userId) => {
+	getFilePath = (userId: string) => {
 		return `${this.usersDir}/${userId}.txt`;
 	};
 
-	saveUser = async (userId, login, password) => {
-		await writeFile(this.getFilePath(userId), `${login} ${password}`);
+	saveUser = async (user: User) => {
+		if (user.id === null) {
+			throw new Error('UserService.saveUser(): No id given!');
+		}
+		await writeFile(
+			this.getFilePath(user.id),
+			`${user.login} ${user.password}`
+		);
 	};
 
-	obtainUser = (userId) => {
+	#obtainUser = (userId: string) => {
 		return readFile(this.getFilePath(userId), 'utf8');
 	};
 
-	createUser = async (login, password) => {
+	createUser = async (user: User) => {
 		const userId = uuidv4();
 		const hashedPassword = await bcrypt.hash(
-			password,
-			parseInt(process.env.SALT_ROUNDS)
+			user.password,
+			parseInt(<string>process.env.SALT_ROUNDS)
 		);
 
-		await this.saveUser(userId, login, hashedPassword);
+		await this.saveUser(new User(user.login, hashedPassword, userId));
 
 		return userId;
 	};
 
-	getUserById = async (userId) => {
+	getUserById = async (userId: string) => {
 		try {
-			const data = await this.obtainUser(userId);
+			const data = await this.#obtainUser(userId);
 			const [login, hashedPassword] = data.split(' ');
 
-			return {
-				login,
-				hashedPassword,
-			};
+			return new User(login, hashedPassword);
 		} catch (err) {
 			return null;
 		}
 	};
 
-	isUserValid = async (userId, login, password) => {
-		const user = await this.getUserById(userId);
+	getUserByLogin = async (login: string) => {
+		const users = await this.getAllUsers();
+		return users.find((u) => u.login === login) || null;
+	};
+
+	isUserValid = async (u: User) => {
+		const user = await this.getUserByLogin(u.login);
 		if (user === null) {
 			return false;
 		}
-		if (user.login !== login) {
+		if (user.login !== u.login) {
 			return false;
 		}
 
-		const passwordOk = await bcrypt.compare(password, user.hashedPassword);
+		const passwordOk = await bcrypt.compare(u.password, user.password);
 
 		if (passwordOk) {
 			return true;
@@ -85,24 +96,28 @@ class UserService {
 		}
 
 		const users = await Promise.all(getUserPromises);
-		return users.map((user, userIndex) => ({
-			id: userIds[userIndex],
-			...user,
-		}));
+		return users
+			.filter((u) => u !== null)
+			.map((u, userIndex) => {
+				const user = u as User;
+				return new User(user.login, user.password, userIds[userIndex]);
+			});
 	};
 
 	getAllUserLogins = async () => {
 		return (await this.getAllUsers()).map((user) => user.login);
 	};
 
-	isLoginAlreadyTaken = async (login) => {
+	isLoginAlreadyTaken = async (login: string) => {
 		return (await this.getAllUserLogins()).some((l) => l === login);
 	};
 
-	deleteUserById = async (userId) => {
+	deleteUserById = async (userId: string) => {
 		try {
 			await fs.promises.unlink(this.getFilePath(userId));
-		} catch (_) {}
+		} catch (_) {
+			console.error('failed to delete user');
+		}
 	};
 
 	/*
@@ -115,7 +130,7 @@ class UserService {
 		await Promise.all(userIds.map((userId) => this.deleteUserById(userId)));
 	};
 
-	userExists = async (userId) => {
+	userExists = async (userId: string) => {
 		try {
 			await fs.promises.access(this.getFilePath(userId), fs.constants.F_OK);
 			return true;
@@ -125,14 +140,4 @@ class UserService {
 	};
 }
 
-module.exports = new UserService();
-
-// module.exports = {
-// 	createUser,
-// 	getUserById,
-// 	isUserValid,
-// 	getAllUsers,
-// 	getAllUserLogins,
-// 	isLoginAlreadyTaken,
-// 	userExists,
-// };
+export default new UserService();

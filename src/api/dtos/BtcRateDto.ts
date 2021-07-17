@@ -1,5 +1,8 @@
-class BtcRateDto {
-	constructor(obj) {
+export class BtcRateDto {
+	sell: number;
+	buy: number;
+
+	constructor(obj: any) {
 		this.sell = obj.sell;
 		this.buy = obj.buy;
 	}
@@ -8,9 +11,7 @@ class BtcRateDto {
 		return Boolean(this.sell) && Boolean(this.buy);
 	}
 
-	static isValid(obj) {
+	static isValid(obj: any) {
 		return new BtcRateDto(obj).isValid();
 	}
 }
-
-module.exports = BtcRateDto;

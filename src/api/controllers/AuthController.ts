@@ -1,22 +1,21 @@
-const authService = require('../services/AuthService');
-const TokenDto = require('../dtos/TokenDto');
+import { Context } from 'koa';
+import authService from '../services/AuthService';
+import { TokenDto } from '../dtos/TokenDto';
 
 class AuthController {
-	async login(ctx) {
-		// const { login, password } = ctx.request.body;
-
+	async login(ctx: Context) {
 		const result = await authService.login(ctx.userDto);
 
 		ctx.status = result.status;
 		ctx.body = new TokenDto(result.body);
 	}
 
-	async create(ctx) {
-		// const { login, password } = ctx.request.body;
+	async create(ctx: Context) {
 		const result = await authService.create(ctx.userDto);
+
 		ctx.status = result.status;
 		ctx.body = new TokenDto(result.body);
 	}
 }
 
-module.exports = new AuthController();
+export default new AuthController();

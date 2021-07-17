@@ -1,8 +1,9 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const userService = require('../src/api/services/UserService');
-require('dotenv').config();
-const app = require('../src/app');
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+import userService from '../src/api/services/UserService';
+import dotenv from 'dotenv';
+dotenv.config();
+import app from '../src/app';
 
 chai.use(chaiHttp);
 const expect = chai.expect;
