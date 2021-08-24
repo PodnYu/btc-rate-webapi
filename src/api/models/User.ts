@@ -22,7 +22,15 @@ export class User {
 	}
 
 	isValid() {
-		return Boolean(this.login) && Boolean(this.password);
+		return (
+			Boolean(this.login) &&
+			User.isLoginValid(this.login) &&
+			Boolean(this.password)
+		);
+	}
+
+	static isLoginValid(login: string) {
+		return login.includes(' ') === false;
 	}
 
 	static isValid(obj: any) {
