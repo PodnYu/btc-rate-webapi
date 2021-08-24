@@ -3,6 +3,7 @@ import userService from './UserService';
 import { getBTCToUAHExchange } from '../utils/btcUtils';
 
 class BtcService {
+	// should not know about userServie
 	getBTCToUAHExchange = async (userId: string) => {
 		const response = new ResponseDto();
 

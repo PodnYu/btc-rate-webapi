@@ -7,6 +7,7 @@ import { User } from '../models/User';
 
 const usersDir = path.join(__dirname, '/../../../db/users');
 
+// should save users in json format
 class UserService {
 	usersDir: string;
 
@@ -18,7 +19,7 @@ class UserService {
 		this.usersDir = pathToUsersDb;
 	}
 
-	private getFilePath = (userId: string) => {
+	public getFilePath = (userId: string) => {
 		return `${this.usersDir}/${userId}.txt`;
 	};
 
@@ -43,7 +44,7 @@ class UserService {
 	};
 
 	// maybe createUserOrReturnNull
-	createUser = async (user: User) => {
+	createUser = async (user: User): Promise<string | null> => {
 		const userId = uuidv4();
 		const hashedPassword = await bcrypt.hash(
 			user.password,
