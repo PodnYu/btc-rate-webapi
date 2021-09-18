@@ -17,7 +17,9 @@ class AuthService {
 			return response;
 		}
 
-		const token = await signToken({ userId: user.id });
+		const userWithId = await userService.getUserByLogin(user.login);
+
+		const token = await signToken({ userId: userWithId?.id });
 
 		response.status = 200;
 		response.body = { token };

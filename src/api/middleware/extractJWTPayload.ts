@@ -14,7 +14,10 @@ const extractJWTPayload = async (ctx: Context, next: Next) => {
 		try {
 			ctx.tokenPayload = await verifyToken(token);
 		} catch (err) {
-			console.error('Error occured while verifying token:', err.message);
+			console.error(
+				'Error occured while verifying token:',
+				(<{ message: string }>err).message
+			);
 			ctx.tokenPayload = null;
 			ctx.status = 401;
 			ctx.body = { message: 'Unauthorized, bad token!' };

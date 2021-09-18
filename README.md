@@ -1,7 +1,6 @@
 ## Web API using koa and jwt!
 `mkdir -p ./api/db/users`
-`npm install`
-`npm run start`
+`docker-compose up`
 ### routes:
 #### POST /user/create
 #### input: {

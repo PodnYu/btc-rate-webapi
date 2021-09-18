@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  app:
+    container_name: btc-api
+    build: .
+    volumes:
+      - ./db/users:/usr/src/app/db/users
+      - ./src:/usr/src/app/src
+    ports:
+      - '5007:5007'
+    depends_on:
+      - btc-service
+  btc-service:
+    container_name: btc-service
+    build: ./btcMicroService/
+    ports:
+      - '5008:5008'
+    volumes:
+      - ./btcMicroService/src:/usr/src/app/src

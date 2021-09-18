@@ -3,3 +3,4 @@ node_modules
 db
 .prettierignore
 dist
+btcMicroService/node_modules
