@@ -6,9 +6,11 @@ services:
     volumes:
       - ./db/users:/usr/src/app/db/users
       - ./src:/usr/src/app/src
+      - ./.env:/usr/src/app/.env
     ports:
       - '5007:5007'
     depends_on:
+      - rabbitmq
       - btc-service
   btc-service:
     container_name: btc-service
@@ -17,3 +19,18 @@ services:
       - '5008:5008'
     volumes:
       - ./btcMicroService/src:/usr/src/app/src
+      - ./btcMicroService/.env:/usr/src/app/.env
+  logs-consumer:
+    container_name: logs-consumer
+    build: ./logsConsumer/
+    volumes:
+      - ./logsConsumer/src:/usr/src/app/src
+      - ./logsConsumer/.env:/usr/src/app/.env
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'

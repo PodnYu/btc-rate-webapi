@@ -4,3 +4,4 @@ db
 .prettierignore
 dist
 btcMicroService/node_modules
+logsConsumer/node_modules
